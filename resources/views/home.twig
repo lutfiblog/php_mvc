@@ -1,0 +1,28 @@
+{% extends 'layouts/app.twig' %} {% block title %} Home {% endblock %} {% block
+sidenav %}
+<div>
+  <li class="active" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
+    <a class="link" href="{{ base_url() }}/">
+      <i class="bx bx-home-alt icon"></i>
+      <span class="text nav-text">Dashboard</span>
+    </a>
+  </li>
+  <li class="" data-bs-toggle="tooltip" data-bs-placement="right" title="Tools">
+    <a class="link" href="{{ base_url() }}/test">
+        <i class='bx bxs-widget icon'></i>
+      <span class="text nav-text">Tools</span>
+    </a>
+  </li>
+</div>
+{% endblock %} {% block content %}
+<button type="button" class="btn btn-primary">Primary</button>
+<button type="button" class="btn btn-secondary">Secondary</button>
+<button type="button" class="btn btn-success">Success</button>
+<button type="button" class="btn btn-danger">Danger</button>
+<button type="button" class="btn btn-warning">Warning</button>
+<button type="button" class="btn btn-info">Info</button>
+<button type="button" class="btn btn-light">Light</button>
+<button type="button" class="btn btn-dark">Dark</button>
+
+<button type="button" class="btn btn-link">Link</button>
+{% endblock %}
