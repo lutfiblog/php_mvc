@@ -10,3 +10,5 @@ function connect_db() {
     return $connection;
 }
 ?>
+
+{# return new PDO('mysql:host=sql596.main-hosting.eu;dbname=u796089999_apidb', 'u796089999_haslabs', 'Annisaku-2517'); #}

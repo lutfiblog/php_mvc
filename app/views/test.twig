@@ -1,0 +1,199 @@
+{% extends 'layouts/app.twig' %} {% block title %} Home {% endblock %} {% block
+sidenav %}
+<div>
+  <li class="" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
+    <a class="link" href="{{ base_url() }}/">
+      <i class="bx bx-home-alt icon"></i>
+      <span class="text nav-text">Dashboard</span>
+    </a>
+  </li>
+  <li class="active" data-bs-toggle="tooltip" data-bs-placement="right" title="Tools">
+    <a class="link" href="{{ base_url() }}/test">
+        <i class='bx bxs-widget icon'></i>
+      <span class="text nav-text">Tools</span>
+    </a>
+  </li>
+</div>
+{% endblock %} {% block content %}
+<div class="container">
+    <div class="row">
+      <div class="col">
+        Column
+      </div>
+      <div class="col">
+        Column
+      </div>
+      <div class="col">
+        Column
+      </div>
+    </div>
+  </div>
+  <div style="background-color: white; border-radius: 10px;">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+
+  <div class="container-fluid mt-5" x-data="studentCrud()">
+    <div x-show="getData"></div>
+    <div class="row">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header text-light bg-dark">
+                    Student Table
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead class="thead">
+                            <tr>
+                                <th>SL</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="(student,index) in students" :key="index">
+                                <tr>
+                                    <td x-text="index+1"></td>
+                                    <td x-text="student.name"></td>
+                                    <td x-text="student.email"></td>
+                                    <td>
+                                        <button @click.prevent="editData(student,index)"
+                                            class="btn btn-info">Edit</button>
+                                        <button @click.prevent="deleteData(index)"
+                                            class="btn btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card">
+                <div class="card-header text-light bg-dark">
+                    <span x-show="addMode">Create Student</span>
+                    <span x-show="!addMode">Edit Student</span>
+                </div>
+                <div class="card-body">
+                    <form @submit.prevent="saveData" x-show="addMode">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input x-model="form.name" type="text" class="form-control" placeholder="Enter Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input x-model="form.email" type="text" class="form-control" placeholder="Enter Email">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                    <form @submit.prevent="updateData" x-show="!addMode">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input x-model="form.name" type="text" class="form-control" placeholder="Enter Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input x-model="form.email" type="text" class="form-control" placeholder="Enter Email">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="button" class="btn btn-danger" @click.prevent="cancelEdit">Cancel Edit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+function studentCrud() {
+  return {
+      addMode: true,
+      id: '',
+      form: {
+          name: '',
+          email: '',
+      },
+      students: [{
+          name: 'test',
+          email: 'test@mail.com'
+      }],
+      data: null,
+      getData(){
+        fetch('http://localhost:8080/playground/mysqli')
+        .then((response) => response.json())
+        .then((json) => this.data = json);
+      },
+      saveData() {
+          if (this.form.name.length && this.form.email.length) {
+              this.students.push({
+                  name: this.form.name,
+                  email: this.form.email
+              })
+              this.resetForm()
+          }
+      },
+      editData(student, index) {
+          this.addMode = false
+          this.form.name = student.name
+          this.form.email = student.email
+          this.id = index
+      },
+      updateData() {
+          if (this.form.name.length && this.form.email.length) {
+              this.students.splice(this.id, 1, {
+                  name: this.form.name,
+                  email: this.form.email,
+              })
+              this.resetForm()                    
+          }
+      },
+      deleteData(index) {
+          this.students.splice(index, 1)
+      },
+      cancelEdit(){
+          this.resetForm()
+      },
+      resetForm() {
+          this.form.name = ''
+          this.form.email = ''
+          this.addMode = true
+      }
+  }
+}
+</script>
+{% endblock %}

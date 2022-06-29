@@ -1,11 +1,15 @@
 {
     "require": {
         "slim/slim": "3.*",
-        "slim/twig-view": "^2.1"
+        "slim/twig-view": "^2.1",
+        "firebase/php-jwt": "^6.2"
     },
     "autoload": {
         "psr-4": {
-            "App\\": "resources"
+            "App\\": "app/"
         }
+    },
+    "scripts": {
+        "dev": "php -S localhost:8080 -t index.php"
     }
 }

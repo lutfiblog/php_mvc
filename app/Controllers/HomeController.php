@@ -30,10 +30,13 @@ class HomeController
 
     public function testGetName($request, $response, $args)
     {
-        $user = $this->db->prepare("SELECT * FROM friends where username = :username");
+        $user = $this->db->prepare("SELECT * FROM test_table where id = :id");
         $user->execute([
-            'username' => $args['username']
+            'id' => $args['id']
         ]);
-        var_dump($user->fetch(PDO::FETCH_OBJ));
+        $data = $user->fetchAll(PDO::FETCH_ASSOC);
+        // var_dump($user->fetch(PDO::FETCH_OBJ));
+
+        return $this->view->render($response, 'test.twig', ['user' => $args['id']]);
     }
 }
